@@ -28,4 +28,16 @@ interface Librarian extends Person{
     assistCustomer: (castName: string) => void;
 }
 
-export { Book, DamageLogger as Logger, Person, Author, Librarian };
+interface Magazine {
+    title: string;
+    publisher: string;
+}
+
+interface ShelfItem {
+    title: string;
+}
+
+interface LibNgrCallback {
+    (err: Error, titles: string[]): void;
+}
+export { Book, DamageLogger as Logger, Person, Author, Librarian, Magazine, ShelfItem, LibNgrCallback };

@@ -1,7 +1,6 @@
-import { ReferenceItem, UniversityLibrarian } from "./classes";
-import {BookOrUndefined, BookProperties} from "./types";
-import {Category} from "./enums";
-import {Book, Logger, Person, Author, Librarian} from "./interfaces";
+import { BookOrUndefined, BookProperties } from "./types";
+import { Category } from "./enums";
+import {Book, LibNgrCallback} from "./interfaces";
 
 export function getAllBooks(): readonly Book[] {
     const books:readonly Book[] = <const>[
@@ -139,7 +138,6 @@ export function checkoutBooks(customer: string, ...booksIDs: number[]): string[]
 export function getTitles(author: string):string[]
 export function getTitles(available: boolean):string[]
 export function getTitles(id: number, available: boolean):string[]
-
 export function getTitles(...args: any[]):string[] {
     const books = getAllBooks();
 
@@ -177,4 +175,51 @@ export function bookTitleTransform(title: any) {
 
 export function printBook(book: Book): void {
     console.log(`${book.title} by ${book.author}`)
+}
+
+export function purge<T>(inventory: Array<T>): Array<T> {
+    return inventory.slice(2);
+}
+
+export function getBooksByCategory(category: Category, callback: LibNgrCallback) {
+    setTimeout(() => {
+        try {
+            const titles = getBookTitlesByCategory(category);
+            if (titles.length > 0) {
+                callback(null, titles)
+            } else {
+                throw new Error('no books found')
+            }
+        }
+        catch(error) {
+            callback(error, null)
+        }
+    }, 2000)
+}
+
+export function logCategorySearch(err: Error, titles: string[]): void {
+    if (err) {
+        console.log( `Error message: ${err.message}`);
+    } else {
+        console.log(titles);
+    }
+}
+
+export function getBooksByCategoryPromise(category: Category): Promise<string[]> {
+    const p: Promise<string[]> = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const titles = getBookTitlesByCategory(category);
+                if (titles.length > 0) {
+                    resolve(titles)
+                } else {
+                    reject('no books found')
+                }
+        }, 2000)
+    })
+    return p;
+}
+
+export async function logSearchResults(category: Category): Promise<void> {
+    const titles = await getBooksByCategoryPromise(category);
+    console.log(titles);
 }

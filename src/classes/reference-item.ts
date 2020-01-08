@@ -1,6 +1,6 @@
-import * as Interfaces from "./interfaces";
+import {timeout} from "../decorators";
 
-abstract class ReferenceItem {
+export abstract class ReferenceItem {
     //title: string;
     //year: number;
 
@@ -25,6 +25,7 @@ abstract class ReferenceItem {
         console.log('Creating a new ReferenceItem...');
     }
 
+    @timeout(2000)
     printItem():void {
         console.log(`${this.title} was published in ${this.year}`);
         console.log(`Department: ${ReferenceItem.department }`)
@@ -32,15 +33,3 @@ abstract class ReferenceItem {
 
     abstract printCitation():void;
 }
-
-class UniversityLibrarian implements Interfaces.Librarian {
-    name: string;
-    email: string;
-    department: string;
-
-    assistCustomer(custName: string):void {
-        console.log(`${this.name} is assisting ${custName}`)
-    }
-}
-
-export { ReferenceItem, UniversityLibrarian };
